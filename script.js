@@ -10,11 +10,17 @@ model.compile({
     loss: 'meanSquaredError'
 });
 
-    model.fit(xs, ys, {epochs: 200}).then(() => {
-    model.predict(tf.tensor2d([5], [1, 1])).print();
-    model.predict(tf.tensor2d([6], [1, 1])).print();
+model.fit(xs, ys, {epochs: 200}).then(() => {
     drawChart();
 });
+
+function makePrediction() {
+    const inputValue = document.getElementById('inputValue').value;
+    const prediction = model.predict(tf.tensor2d([parseFloat(inputValue)], [1, 1]));
+    prediction.array().then(preds => {
+        document.getElementById('predictionResult').innerText = `Predicted value: ${preds[0][0].toFixed(2)}`;
+    });
+}
 
 async function drawChart() {
     const predictions = model.predict(tf.tensor2d([1, 2, 3, 4, 5, 6], [6, 1]));
